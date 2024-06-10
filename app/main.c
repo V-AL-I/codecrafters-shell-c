@@ -14,7 +14,7 @@ int checkExit(char input[SIZE]) {
     //
     if (strlen(input) == 6) {
         if (input[0] == 'e' && input[1] == 'x' && input[2] == 'i' && input[3] == 't') {
-            return ((int) input[5]) - 30;
+            return ((int) input[5]) - 48;
         }
     }
     return -1;
