@@ -13,12 +13,25 @@ int checkExit(char input[SIZE]) {
     // returns a positive int if input is exit, the int being the exit code found
     //
     if (strlen(input) == 6) {
-        if (input[0] == 'e' && input[1] == 'x' && input[2] == 'i' && input[3] == 't') {
+        if (strncmp(input, "exit", 4) == 0) {
             return ((int) input[5]) - 48;
         }
     }
     return -1;
 
+}
+
+int checkEcho(char input[SIZE]) {
+    if (strncmp(input, "echo", 4) == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void echo(char input[SIZE]) { 
+    input += 5;
+    printf("%s\n", input);
+    
 }
 
 int main() {
@@ -39,7 +52,12 @@ int main() {
         if (exit >= 0) {
             return exit;
         }
-        displayErrorNotFound(input);
+        if (checkEcho(input)) {
+            echo(input);
+        }
+        else {
+            displayErrorNotFound(input);
+        }
     }
     
     return 0;
