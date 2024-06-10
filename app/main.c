@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 
-void displayErrorNotFound(char* command) {
-    printf("%s: command not found", command);
+void displayErrorNotFound(char command[100]) {
+    printf("%s: command not found\n", command);
 }
 
 int main() {
@@ -15,6 +16,7 @@ int main() {
     // Wait for user input
     char input[100];
     fgets(input, 100, stdin);
+    input[strlen(input) - 1] = '\0';
     displayErrorNotFound(input);
     
     return 0;
