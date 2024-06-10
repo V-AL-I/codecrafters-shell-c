@@ -1,8 +1,24 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-void displayErrorNotFound(char command[100]) {
-    printf("%s: command not found\n", command);
+#define SIZE 100
+
+void displayErrorNotFound(char input[SIZE]) {
+    printf("%s: command not found\n", input);
+}
+
+int checkExit(char input[SIZE]) {
+    // returns -1 if input is not exit
+    // returns a positive int if input is exit, the int being the exit code found
+    //
+    if (strlen(input) == 6) {
+        if (input[0] == 'e' && input[1] == 'x' && input[2] == 'i' && input[3] == 't') {
+            return ((int) input[5]) - 30;
+        }
+    }
+    return -1;
+
 }
 
 int main() {
@@ -12,13 +28,17 @@ int main() {
     //Uncomment this block to pass the first stage
     
     // Wait for user input
-    char input[100];
+    char input[SIZE];
     while(1) {
         printf("$ ");
         fflush(stdout);
 
-        fgets(input, 100, stdin);
+        fgets(input, SIZE, stdin);
         input[strlen(input) - 1] = '\0';
+        int exit = checkExit(input);
+        if (exit >= 0) {
+            return exit;
+        }
         displayErrorNotFound(input);
     }
     
