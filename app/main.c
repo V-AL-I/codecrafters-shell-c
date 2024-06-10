@@ -10,14 +10,17 @@ int main() {
     //printf("Logs from your program will appear here!\n");
 
     //Uncomment this block to pass the first stage
-    printf("$ ");
-    fflush(stdout);
-
+    
     // Wait for user input
     char input[100];
-    fgets(input, 100, stdin);
-    input[strlen(input) - 1] = '\0';
-    displayErrorNotFound(input);
+    while(1) {
+        printf("$ ");
+        fflush(stdout);
+
+        fgets(input, 100, stdin);
+        input[strlen(input) - 1] = '\0';
+        displayErrorNotFound(input);
+    }
     
     return 0;
 }
