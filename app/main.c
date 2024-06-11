@@ -40,6 +40,10 @@ int checkPwd(char input[SIZE]) {
     return strncmp(input, "pwd", 3) == 0;
 }
 
+int checkCd(char input[SIZE]) {
+    return strncmp(input, "cd", 2) == 0;
+}
+
 void pwd() {
     char wd[SIZE];
     getcwd(wd, SIZE);
@@ -125,11 +129,19 @@ void execute(char input[SIZE]) {
     displayErrorNotFound(input);
 }
 
+void cd(char input[SIZE]) {
+    input += 3;
+    if (chdir(input)) {
+        printf("cd: %s: No such file or directory\n", input);
+    }
+}
+
 int main() {
     Builtin myType = {"type", 4};
     Builtin myEcho = {"echo", 4};
     Builtin myExit = {"exit", 4};
     Builtin myPwd = {"pwd", 3};
+    Builtin myCd = {"cd", 2};
 
     Builtin builtin[NB_OF_BUILTIN] = {myType, myEcho, myExit};
     
@@ -153,6 +165,9 @@ int main() {
         }
         else if (checkPwd(input)) {
             pwd();
+        }
+        else if (checkCd(input)) {
+            cd(input);
         }
         else {
             execute(input);
