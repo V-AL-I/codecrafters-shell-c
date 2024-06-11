@@ -93,6 +93,22 @@ void type(char input[SIZE], Builtin builtin[NB_OF_BUILTIN]) {
     printf("%s not found\n", input);
 }
 
+void execute(char input[SIZE]) {
+    char* PATH = getenv("PATH");
+    int* path_count = calloc(1, sizeof(int));
+    char** filepaths = getPaths(PATH, path_count);
+
+    for (int i = 0; i < path_count[0]; i++) {
+        char fullpath[strlen(filepaths[i]) + strlen(input)];
+        sprintf(fullpath, "%s/%s", filepaths[i], input);
+        if (access(fullpath, X_OK) == 0) {
+            system(fullpath);
+            return;
+        }
+    }
+    displayErrorNotFound(input);
+}
+
 int main() {
     Builtin myType = {"type", 4};
     Builtin myEcho = {"echo", 4};
@@ -119,9 +135,8 @@ int main() {
             type(input, builtin);
         }
         else {
-            displayErrorNotFound(input);
+            execute(input);
         }
     }
-    
     return 0;
 }
