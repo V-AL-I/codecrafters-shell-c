@@ -42,7 +42,7 @@ int checkPwd(char input[SIZE]) {
 
 void pwd() {
     char wd[SIZE];
-    getwd(wd);
+    getcwd(wd, SIZE);
     printf("%s\n", wd);
 }
 
