@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define SIZE 100
 #define NB_OF_BUILTIN 3
@@ -40,11 +41,45 @@ void echo(char input[SIZE]) {
     printf("%s\n", input);
 }
 
+char** getPaths(char* path, int path_count) {
+    path_count = 0;
+    for (int i = 0; path[i]; i++) {
+        if (path[i] == ':') path_count++;
+    }
+    char** filepaths = calloc(path_count, sizeof(char*));
+    for (int i = 0; i < path_count; i++) filepaths[i] = calloc(SIZE, sizeof(char));
+    int x = 0;
+    int y = 0;
+    for (int i = 0; path[i]; i++) {
+        if (path[i] != ':') {
+            filepaths[x][y++] = path[i];
+        }
+        else {
+            filepaths[x++][y] = '\0';
+            y = 0;
+        }
+    }
+    return filepaths;
+}
+
+
+
 void type(char input[SIZE], Builtin builtin[NB_OF_BUILTIN]) {
     input += 5;
     for (int i = 0; i < NB_OF_BUILTIN; i++) {
         if (strncmp(builtin[i].name, input, builtin[i].size) == 0) {
             printf("%s is a shell builtin\n", input);
+            return;
+        }
+    }
+    char* PATH = getenv("PATH");
+    int path_count = 0;
+    char** filepaths = getPaths(PATH, path_count);
+    for (int i = 0; i < path_count; i++) {
+        char fullpath[strlen(filepaths[i]) + strlen(input) - 5];
+        sprintf(fullpath, "%s/%s", filepaths[i], input);
+        if (access(fullpath, X_OK) == 0) {
+            printf("%s is %s\n", input, fullpath);
             return;
         }
     }
