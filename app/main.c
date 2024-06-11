@@ -99,11 +99,16 @@ void execute(char input[SIZE]) {
     char** filepaths = getPaths(PATH, path_count);
 
     for (int i = 0; i < path_count[0]; i++) {
-        char* command = strtok(input, " ");
+        char* inputCopy = calloc(SIZE, sizeof(char));
+        strcpy(inputCopy, input);
+        char* command = strtok(inputCopy, " ");
         char fullpath[strlen(filepaths[i]) + strlen(command)];
         sprintf(fullpath, "%s/%s", filepaths[i], command);
         if (access(fullpath, X_OK) == 0) {
-            system(input);
+            char exec[strlen(filepaths[i]) + strlen(input)];
+            sprintf(exec, "%s/%s", filepaths[i], input);
+            //printf("%s\n", input);
+            system(exec);
             return;
         }
     }
