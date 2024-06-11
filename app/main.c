@@ -36,6 +36,16 @@ int checkType(char input[SIZE]) {
     return strncmp(input, "type", 4) == 0;
 }
 
+int checkPwd(char input[SIZE]) {
+    return strncmp(input, "pwd", 3) == 0;
+}
+
+void pwd() {
+    char wd[SIZE];
+    getwd(wd);
+    printf("%s\n", wd);
+}
+
 void echo(char input[SIZE]) { 
     input += 5;
     printf("%s\n", input);
@@ -119,6 +129,7 @@ int main() {
     Builtin myType = {"type", 4};
     Builtin myEcho = {"echo", 4};
     Builtin myExit = {"exit", 4};
+    Builtin myPwd = {"pwd", 3};
 
     Builtin builtin[NB_OF_BUILTIN] = {myType, myEcho, myExit};
     
@@ -139,6 +150,9 @@ int main() {
         }
         else if (checkType(input)) {
             type(input, builtin);
+        }
+        else if (checkPwd(input)) {
+            pwd();
         }
         else {
             execute(input);
