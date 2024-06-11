@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define SIZE 100
+#define SIZE 500
 #define NB_OF_BUILTIN 3
 
 typedef struct {
@@ -41,13 +41,14 @@ void echo(char input[SIZE]) {
     printf("%s\n", input);
 }
 
-char** getPaths(char* path, int path_count) {
-    path_count = 0;
+char** getPaths(char* path, int* path_count) {
+    path_count[0] = 0;
     for (int i = 0; path[i]; i++) {
-        if (path[i] == ':') path_count++;
+        if (path[i] == ':') path_count[0]++;
     }
-    char** filepaths = calloc(path_count, sizeof(char*));
-    for (int i = 0; i < path_count; i++) filepaths[i] = calloc(SIZE, sizeof(char));
+    path_count[0]++;
+    char** filepaths = calloc(path_count[0], sizeof(char*));
+    for (int i = 0; i < path_count[0]; i++) filepaths[i] = calloc(SIZE, sizeof(char));
     int x = 0;
     int y = 0;
     for (int i = 0; path[i]; i++) {
@@ -55,10 +56,12 @@ char** getPaths(char* path, int path_count) {
             filepaths[x][y++] = path[i];
         }
         else {
+            //printf("%s\n", filepaths[x]);
             filepaths[x++][y] = '\0';
             y = 0;
         }
     }
+    //printf("getPaths was successfull\n");
     return filepaths;
 }
 
@@ -73,11 +76,15 @@ void type(char input[SIZE], Builtin builtin[NB_OF_BUILTIN]) {
         }
     }
     char* PATH = getenv("PATH");
-    int path_count = 0;
+    //printf("%s\n", PATH);
+
+    int* path_count = calloc(1, sizeof(int));
     char** filepaths = getPaths(PATH, path_count);
-    for (int i = 0; i < path_count; i++) {
-        char fullpath[strlen(filepaths[i]) + strlen(input) - 5];
+    //printf("path_count = %i\n", path_count[0]);
+    for (int i = 0; i < path_count[0]; i++) {
+        char fullpath[strlen(filepaths[i]) + strlen(input)];
         sprintf(fullpath, "%s/%s", filepaths[i], input);
+        //printf("%s\n", fullpath);
         if (access(fullpath, X_OK) == 0) {
             printf("%s is %s\n", input, fullpath);
             return;
