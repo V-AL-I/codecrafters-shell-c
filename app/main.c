@@ -143,7 +143,10 @@ void cd(char input[SIZE]) {
         //printf("%s\n", newDir);
         if (chdir(newDir)) printf("cd: %s: No such file or directory\n", inputCopy);
     }
-    
+    else if (strncmp(input, "~", 1) == 0) {
+        char* home = getenv("HOME");
+        if (chdir(home)) printf("error home directory\n");
+    }
     else if (chdir(input)) {
         printf("cd: %s: No such file or directory\n", input);
     }
