@@ -104,7 +104,7 @@ void type(char input[SIZE], Builtin builtin[NB_OF_BUILTIN]) {
             return;
         }
     }
-    printf("%s not found\n", input);
+    printf("%s: not found\n", input);
 }
 
 void execute(char input[SIZE]) {
