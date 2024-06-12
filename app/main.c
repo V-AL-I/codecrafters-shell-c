@@ -131,7 +131,47 @@ void execute(char input[SIZE]) {
 
 void cd(char input[SIZE]) {
     input += 3;
-    if (chdir(input)) {
+    char* inputCopy = calloc(strlen(input), sizeof(char));
+    strcpy(inputCopy, input);
+
+    if (strncmp(input, "./", 2) == 0) {
+        input++;
+        char newDir[SIZE];
+        char cwd[SIZE];
+        getcwd(cwd, SIZE);
+        sprintf(newDir, "%s%s", cwd, input);
+        printf("%s\n", newDir);
+        if (chdir(newDir)) printf("cd: %s: No such file or directory\n", inputCopy);
+    }
+    else if (strncmp(input, "000", 3) == 0) {
+        input+=3;
+        int backCount = 1;
+        while(strncmp(input, "../", 3) == 0) {
+            input += 3;
+            backCount++;
+        }
+        char cwd[SIZE];
+        getcwd(cwd, SIZE);
+        int i = SIZE - 1;
+        int count = 0;
+        for (; cwd[i]; i--) {
+            if (cwd[i] == '/') {
+                count++;
+                if (count == backCount) break;
+            } 
+        }
+        char* newDir = calloc(i+1, sizeof(char));
+        int j = 0;
+        for (; j < i; j++) {
+            newDir[j] = cwd[j];
+        }
+        newDir[j] = '\0';
+
+        printf("newDir = %s\n", newDir);
+        if (chdir(newDir)) printf("cd: %s: No such file or directory\n", inputCopy);
+
+    }
+    else if (chdir(input)) {
         printf("cd: %s: No such file or directory\n", input);
     }
 }
